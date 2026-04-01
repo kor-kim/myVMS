@@ -6,170 +6,163 @@
 <meta name="theme-color" content="#0d0d0d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="myVMS">
 <title>myVMS</title>
 <link rel="manifest" href="manifest.json">
 <style>
-body{background:#0d0d0d;color:#fff;font-family:-apple-system,sans-serif;margin:0;display:flex;flex-direction:column;min-height:100dvh;max-width:430px;margin:0 auto}
-.screen{display:none;flex-direction:column;flex:1}.screen.active{display:flex}
-.sbar{display:flex;justify-content:space-between;padding:12px 20px 6px;background:#0d0d0d}
-.tbar{display:flex;align-items:center;padding:8px 14px;background:#0d0d0d;border-bottom:.5px solid #2a2a2a;gap:10px}
-.tbar h2{flex:1;font-size:17px;font-weight:600;text-align:center;margin:0}
-.ibtn{width:34px;height:34px;border-radius:50%;background:#1e1e1e;border:none;color:#aaa;cursor:pointer;font-size:17px}
-.nav{display:flex;background:#111;border-top:.5px solid #2a2a2a;padding:6px 0 10px}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0;border:none;background:transparent;cursor:pointer;font-size:10px;color:#666}
-.ni.active{color:#4aa8ff}
-.sa{flex:1;overflow-y:auto}
-.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:10px 0;background:#000}
-.cc{aspect-ratio:16/9;background:#111;position:relative;cursor:pointer}
-.cc canvas{width:100%;height:100%;display:block}
-.cov{position:absolute;bottom:0;left:0;right:0;padding:3px 6px;background:rgba(0,0,0,.55);display:flex;justify-content:space-between}
-.cov span{font-size:10px;color:#ddd}
-.cdl,.cdo{width:6px;height:6px;border-radius:50%}
-.cdl{background:#50c850}.cdo{background:#444}
-.cxb{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.5);border:none;color:#fff;font-size:11px;border-radius:4px;padding:2px 5px;cursor:pointer}
-.nb{display:flex;align-items:center;gap:10px;background:#0a2a1a;border:.5px solid #1a4a2a;border-radius:10px;margin:10px 12px 0;padding:10px 14px}
-.nd{width:7px;height:7px;border-radius:50%;background:#50c850;animation:pl 2s infinite}
+:root{--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:#0d0d0d;color:#fff;font-family:-apple-system,'Noto Sans KR',sans-serif;height:100%;overflow:hidden;}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:430px;margin:0 auto;overflow:hidden;}
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden;}.screen.active{display:flex;}
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:calc(var(--st) + 8px) 18px 6px;background:#0d0d0d;flex-shrink:0;}
+.stitle{font-size:13px;font-weight:700;color:#4aa8ff;}
+.tbar{display:flex;align-items:center;padding:10px 14px;background:#0d0d0d;border-bottom:.5px solid #2a2a2a;flex-shrink:0;gap:10px;}
+.tbar h2{flex:1;font-size:18px;font-weight:700;text-align:center;margin:0;}
+.ibtn{width:36px;height:36px;border-radius:50%;background:#1e1e1e;border:none;color:#aaa;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.nav{display:flex;background:#111;border-top:.5px solid #2a2a2a;padding:6px 0 calc(6px + var(--sb));flex-shrink:0;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border:none;background:transparent;cursor:pointer;font-size:10px;color:#666;font-family:inherit;}
+.ni.active{color:#4aa8ff;}.ni-ico{font-size:22px;line-height:1;}
+.sa{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.nb{display:flex;align-items:center;gap:10px;background:#0a2a1a;border:.5px solid #1a4a2a;border-radius:10px;margin:10px 12px 0;padding:10px 14px;flex-shrink:0;}
+.nd{width:7px;height:7px;border-radius:50%;background:#50c850;animation:pl 2s infinite;flex-shrink:0;}
 @keyframes pl{0%,100%{opacity:1}50%{opacity:.4}}
-.lfv{flex:1;background:#000;position:relative}.lfv canvas{width:100%;height:100%;display:block}
-.ctabs{display:flex;gap:5px;padding:7px 12px;background:#0d0d0d;overflow-x:auto}
-.ctab{padding:5px 14px;border-radius:20px;border:.5px solid #2a2a2a;color:#666;font-size:12px;cursor:pointer;background:transparent;white-space:nowrap}
-.ctab.active{background:#4aa8ff;color:#000;border-color:#4aa8ff;font-weight:600}
-.lcr{display:flex;background:#161616;border-top:.5px solid #2a2a2a}
-.lc{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;border:none;background:transparent;cursor:pointer;font-size:10px;color:#666}
-.dl{padding:12px;display:flex;flex-direction:column;gap:10px}
-.dc{background:#161616;border-radius:14px;overflow:hidden;border:.5px solid #2a2a2a}
-.dct{display:flex;align-items:center;padding:13px 14px;gap:12px}
-.diw{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center}
-.di{flex:1;min-width:0}.dn{font-size:14px;font-weight:500}.dd{font-size:11px;color:#666;margin-top:2px}
-.db{font-size:10px;padding:3px 9px;border-radius:10px;font-weight:500}
-.bon{background:#0a2a1a;color:#50c850;border:.5px solid #1a4a2a}.boff{background:#1e1e1e;color:#666;border:.5px solid #2a2a2a}
-.da{display:flex;border-top:.5px solid #2a2a2a}
-.dab{flex:1;padding:10px 0;border:none;background:transparent;font-size:12px;cursor:pointer;border-right:.5px solid #2a2a2a;color:#aaa}
-.dab:last-child{border-right:none}.dab.p{color:#4aa8ff}.dab.d{color:#f44}
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 14px 2px}
-.mc{border-radius:14px;padding:14px 12px;cursor:pointer;border:2px solid transparent;transition:all .2s;position:relative}
-.mck{position:absolute;top:9px;right:9px;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:10px;opacity:0}
-.mc.active .mck{opacity:1;background:rgba(255,255,255,.9);color:#000}
-.mcdid{background:#0d1f35;color:#4aa8ff}.mcdid.active{border-color:#4aa8ff}
-.mcip{background:#1a1a08;color:#e0c040}.mcip.active{border-color:#e0c040}
-.mclan{background:#0d200d;color:#50c850}.mclan.active{border-color:#50c850}
-.mcqr{background:#200d1a;color:#c060b8}.mcqr.active{border-color:#c060b8}
-.mic{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:18px}
-.mt{font-size:13px;font-weight:600;margin-bottom:3px}.ms{font-size:10px;opacity:.65;line-height:1.4}
-.dvd{height:.5px;background:#2a2a2a;margin:12px 14px 0}
-.fp{display:none;padding:14px 14px 0}.fp.active{display:block}
-.fg{margin-bottom:12px}
-.fl{font-size:11px;color:#666;margin-bottom:5px;display:flex;justify-content:space-between}
-.fi{width:100%;background:#161616;border:1px solid #2a2a2a;border-radius:10px;padding:12px 14px;color:#fff;font-size:14px;outline:none;box-sizing:border-box}
-.fr{display:flex;gap:8px}.fr .fg{flex:1}
-.prow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.pp{padding:7px 13px;border-radius:20px;border:1px solid #2a2a2a;color:#666;font-size:12px;cursor:pointer;background:#161616}
-.pp.active{background:#1a1a08;border-color:#e0c040;color:#e0c040;font-weight:500}
-.trow{display:flex;gap:8px;margin-bottom:12px;align-items:flex-end}
-.tbtn{padding:11px 13px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:10px;color:#aaa;font-size:12px;cursor:pointer;white-space:nowrap}
-.tres{flex:1;background:#161616;border:1px solid #2a2a2a;border-radius:10px;padding:11px 12px;font-size:12px;min-height:40px;display:flex;align-items:center;color:#444}
-.badd{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer}
-.bdid{background:#4aa8ff;color:#000}.bip{background:#e0c040;color:#000}
-.blan{background:#50c850;color:#000}.bqr{background:#c060b8;color:#fff}
-.hint{border-radius:10px;padding:11px 13px;margin-top:11px;font-size:11px;line-height:1.7}
-.hdid{background:#0a1a2e;border:1px solid #0e2540;color:#5a9abf}
-.hip{background:#1a1700;border:1px solid #2e2800;color:#b09040}
-.sbox{background:#1a0d14;border:1.5px dashed #3a1a30;border-radius:12px;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-bottom:12px}
-.lani{background:#161616;border:1px solid #1e2e1e;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-.lanin{flex:1}.lann{font-size:13px;font-weight:500}.lana{font-size:11px;color:#557755;margin-top:2px}
-.lanb{padding:7px 14px;background:#0d200d;border:1px solid #50c850;border-radius:8px;color:#50c850;font-size:12px;cursor:pointer;font-weight:500}
-.ssec{margin-bottom:16px;padding:0 12px}
-.stit{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.7px;padding:0 4px;margin-bottom:7px}
-.si{display:flex;align-items:center;padding:13px 14px;background:#161616;gap:12px;cursor:pointer}
-.si:first-of-type{border-radius:12px 12px 3px 3px}.si:last-of-type{border-radius:3px 3px 12px 12px}
-.sitxt{flex:1}.sitxt p{font-size:14px;margin:0}.sitxt small{font-size:11px;color:#666}
-.tog{width:44px;height:24px;background:#333;border-radius:12px;position:relative;cursor:pointer}
-.tog.on{background:#4aa8ff}.tog::after{content:'';width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .2s}.tog.on::after{left:22px}
-.twrap{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:999;pointer-events:none}
-.toast{background:rgba(30,30,30,.95);border-radius:20px;padding:10px 18px;font-size:13px;color:#fff;border:.5px solid #2a2a2a;white-space:nowrap;opacity:0;transform:translateY(10px);transition:all .3s}
-.toast.show{opacity:1;transform:translateY(0)}
-.ptprev{width:100%;aspect-ratio:16/9;background:#0d1a0d;position:relative}
-.ptprev canvas{width:100%;height:100%;display:block}
-.ptpad{display:grid;grid-template-columns:repeat(3,72px);grid-template-rows:repeat(3,72px);gap:8px;justify-content:center;padding:20px 0}
-.ptbtn{background:#1e1e1e;border:none;border-radius:14px;color:#fff;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.ptbtn:active{background:#333}.ptctr{background:#0a1e2e;color:#4aa8ff;font-size:12px;font-weight:600}
-.ptzr{display:flex;align-items:center;justify-content:center;gap:20px;padding:0 24px 20px}
-.ptzb{flex:1;max-width:100px;padding:14px;background:#1e1e1e;border:none;border-radius:12px;color:#fff;font-size:24px;cursor:pointer}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:10px 0;background:#000;}
+.cc{aspect-ratio:16/9;position:relative;cursor:pointer;overflow:hidden;}
+.cmock{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.crec{position:absolute;top:5px;left:5px;border-radius:3px;padding:2px 5px;font-size:9px;font-weight:700;background:rgba(0,0,0,.6);}
+.ctim{position:absolute;bottom:4px;right:5px;font-size:9px;color:rgba(255,255,255,.55);font-family:monospace;}
+.cov{position:absolute;bottom:0;left:0;right:0;padding:3px 6px;background:rgba(0,0,0,.6);display:flex;justify-content:space-between;align-items:center;}
+.cov span{font-size:10px;color:#ddd;}
+.dot-on{width:6px;height:6px;border-radius:50%;background:#50c850;flex-shrink:0;}
+.dot-off{width:6px;height:6px;border-radius:50%;background:#444;flex-shrink:0;}
+.cxb{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.5);border:none;color:#fff;font-size:10px;border-radius:4px;padding:2px 5px;cursor:pointer;}
+.lfv{flex:1;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+.ctabs{display:flex;gap:5px;padding:7px 12px;background:#0d0d0d;overflow-x:auto;flex-shrink:0;}
+.ctab{padding:5px 14px;border-radius:20px;border:.5px solid #2a2a2a;color:#666;font-size:12px;cursor:pointer;background:transparent;white-space:nowrap;font-family:inherit;}
+.ctab.active{background:#4aa8ff;color:#000;border-color:#4aa8ff;font-weight:600;}
+.lcr{display:flex;background:#161616;border-top:.5px solid #2a2a2a;flex-shrink:0;}
+.lc{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;border:none;background:transparent;cursor:pointer;font-size:10px;color:#666;font-family:inherit;}
+.ptprev{width:100%;aspect-ratio:16/9;background:#0d1a0d;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;}
+.ptpad{display:grid;grid-template-columns:repeat(3,72px);grid-template-rows:repeat(3,72px);gap:8px;justify-content:center;padding:20px 0;}
+.ptbtn{background:#1e1e1e;border:none;border-radius:14px;color:#fff;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.ptbtn:active{background:#333;}.ptctr{background:#0a1e2e;color:#4aa8ff;font-size:12px;font-weight:600;}
+.ptzr{display:flex;align-items:center;justify-content:center;gap:20px;padding:0 24px 20px;}
+.ptzb{flex:1;max-width:100px;padding:14px;background:#1e1e1e;border:none;border-radius:12px;color:#fff;font-size:24px;cursor:pointer;font-family:inherit;}
+.dl{padding:12px;display:flex;flex-direction:column;gap:10px;}
+.dc{background:#161616;border-radius:14px;overflow:hidden;border:.5px solid #2a2a2a;}
+.dct{display:flex;align-items:center;padding:13px 14px;gap:12px;}
+.diw{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.di{flex:1;min-width:0;}.dn{font-size:14px;font-weight:500;}.dd{font-size:11px;color:#666;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.db{font-size:10px;padding:3px 9px;border-radius:10px;font-weight:500;flex-shrink:0;}
+.bon{background:#0a2a1a;color:#50c850;border:.5px solid #1a4a2a;}.boff{background:#1e1e1e;color:#666;border:.5px solid #2a2a2a;}
+.da{display:flex;border-top:.5px solid #2a2a2a;}
+.dab{flex:1;padding:10px 0;border:none;background:transparent;font-size:12px;cursor:pointer;border-right:.5px solid #2a2a2a;color:#aaa;font-family:inherit;}
+.dab:last-child{border-right:none;}.dab.p{color:#4aa8ff;}.dab.d{color:#f44;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 14px 2px;}
+.mc{border-radius:14px;padding:14px 12px;cursor:pointer;border:2px solid transparent;transition:border-color .2s;position:relative;user-select:none;}
+.mc:active{opacity:.85;}
+.mck{position:absolute;top:9px;right:9px;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:11px;opacity:0;}
+.mc.active .mck{opacity:1;background:rgba(255,255,255,.9);color:#000;}
+.mcdid{background:#0d1f35;color:#4aa8ff;}.mcdid.active{border-color:#4aa8ff;}
+.mcip{background:#1a1a08;color:#e0c040;}.mcip.active{border-color:#e0c040;}
+.mclan{background:#0d200d;color:#50c850;}.mclan.active{border-color:#50c850;}
+.mcqr{background:#200d1a;color:#c060b8;}.mcqr.active{border-color:#c060b8;}
+.mic{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:20px;}
+.mt{font-size:13px;font-weight:700;margin-bottom:3px;}.ms{font-size:10px;opacity:.65;line-height:1.4;}
+.dvd{height:.5px;background:#2a2a2a;margin:12px 14px 0;}
+.fp{display:none;padding:14px 14px 0;}.fp.active{display:block;}
+.fg{margin-bottom:12px;}.fl{font-size:11px;color:#666;margin-bottom:5px;display:flex;justify-content:space-between;}
+.fi{width:100%;background:#161616;border:1px solid #2a2a2a;border-radius:10px;padding:12px 14px;color:#fff;font-size:15px;outline:none;font-family:inherit;}
+.fi:focus{border-color:#4aa8ff;}
+.fr{display:flex;gap:8px;}.fr .fg{flex:1;}
+.prow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.pp{padding:7px 13px;border-radius:20px;border:1px solid #2a2a2a;color:#666;font-size:12px;cursor:pointer;background:#161616;font-family:inherit;}
+.pp.active{background:#1a1a08;border-color:#e0c040;color:#e0c040;font-weight:500;}
+.tbtn{padding:11px 13px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:10px;color:#aaa;font-size:12px;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.tres{flex:1;background:#161616;border:1px solid #2a2a2a;border-radius:10px;padding:11px 12px;font-size:12px;min-height:42px;display:flex;align-items:center;color:#444;}
+.badd{width:100%;padding:15px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+.bdid{background:#4aa8ff;color:#000;}.bip{background:#e0c040;color:#000;}.blan{background:#50c850;color:#000;}.bqr{background:#c060b8;color:#fff;}
+.hint{border-radius:10px;padding:11px 13px;margin-top:11px;font-size:11px;line-height:1.7;}
+.hdid{background:#0a1a2e;border:1px solid #0e2540;color:#5a9abf;}.hip{background:#1a1700;border:1px solid #2e2800;color:#b09040;}
+.sbox{background:#1a0d14;border:1.5px dashed #3a1a30;border-radius:12px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;margin-bottom:12px;}
+.lani{background:#161616;border:1px solid #1e2e1e;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.lanin{flex:1;}.lann{font-size:13px;font-weight:500;}.lana{font-size:11px;color:#557755;margin-top:2px;}
+.lanb{padding:7px 14px;background:#0d200d;border:1px solid #50c850;border-radius:8px;color:#50c850;font-size:12px;cursor:pointer;font-weight:500;font-family:inherit;}
+.ssec{margin-bottom:16px;padding:0 12px;}.stit{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.7px;padding:0 4px;margin-bottom:7px;}
+.si{display:flex;align-items:center;padding:13px 14px;background:#161616;gap:12px;cursor:pointer;}
+.si:first-of-type{border-radius:12px 12px 3px 3px;}.si:last-of-type{border-radius:3px 3px 12px 12px;}
+.sitxt{flex:1;}.sitxt p{font-size:14px;margin:0;}.sitxt small{font-size:11px;color:#666;}
+.tog{width:44px;height:24px;background:#333;border-radius:12px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.tog.on{background:#4aa8ff;}.tog::after{content:'';width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .2s;}.tog.on::after{left:22px;}
+.twrap{position:fixed;bottom:calc(70px + var(--sb));left:50%;transform:translateX(-50%);z-index:999;pointer-events:none;}
+.toast{background:rgba(30,30,30,.96);border-radius:20px;padding:10px 18px;font-size:13px;color:#fff;border:.5px solid #333;white-space:nowrap;opacity:0;transform:translateY(10px);transition:all .3s;}
+.toast.show{opacity:1;transform:translateY(0);}
+.empty{text-align:center;padding:56px 24px;}.empty-ico{font-size:56px;margin-bottom:12px;}.empty-t{font-size:16px;color:#aaa;margin-bottom:6px;}.empty-s{font-size:13px;color:#555;}
 </style>
 </head>
 <body>
+<div id="app">
 <div class="twrap"><div class="toast" id="toast"></div></div>
-
 <div class="screen active" id="scr-live">
-  <div class="sbar"><span id="c0" style="font-size:15px;font-weight:600">00:00</span><span style="font-size:13px;color:#4aa8ff;font-weight:600">myVMS</span><span style="font-size:12px">📶🔋</span></div>
+  <div class="sbar"><span style="font-size:14px;font-weight:600" id="c0">00:00</span><span class="stitle">myVMS</span><span style="font-size:12px">📶🔋</span></div>
   <div class="tbar"><h2>라이브 보기</h2><button class="ibtn" onclick="toggleGrid()">⊞</button></div>
-  <div class="sa">
-    <div class="nb"><div class="nd"></div><span style="font-size:12px;color:#50c850">현관 카메라 — 모션 감지됨</span></div>
-    <div class="cgrid" id="cgrid"></div>
-  </div>
+  <div class="nb"><div class="nd"></div><span style="font-size:12px;color:#50c850">현관 카메라 — 모션 감지됨</span></div>
+  <div class="sa"><div class="cgrid" id="cgrid"></div></div>
 </div>
-
 <div class="screen" id="scr-full">
-  <div class="sbar" style="background:#000"><span id="c1" style="font-size:15px;font-weight:600">00:00</span><span style="font-size:13px;color:#4aa8ff;font-weight:600">myVMS</span><span style="font-size:12px">📶🔋</span></div>
-  <div class="tbar" style="background:#000;border-color:#222">
-    <button class="ibtn" onclick="goBack()" style="background:#1a1a1a">←</button>
-    <h2 id="ftit">카메라</h2>
-    <button class="ibtn" style="background:#1a1a1a">⋮</button>
-  </div>
+  <div class="sbar" style="background:#000"><span style="font-size:14px;font-weight:600" id="c1">00:00</span><span class="stitle">myVMS</span><span style="font-size:12px">📶🔋</span></div>
+  <div class="tbar" style="background:#000;border-color:#222"><button class="ibtn" onclick="goBack()" style="background:#1a1a1a">←</button><h2 id="ftit">카메라</h2><button class="ibtn" style="background:#1a1a1a">⋮</button></div>
   <div class="ctabs" id="ctabs"></div>
-  <div class="lfv"><canvas id="fcanv"></canvas></div>
+  <div class="lfv"><span style="font-size:56px" id="fv-ico">📹</span><span style="font-size:14px;color:#557" id="fv-nm">라이브</span></div>
   <div class="lcr">
-    <button class="lc" onclick="togAudio(this)"><span style="font-size:20px" id="aico">🔇</span><span id="albl">음소거</span></button>
-    <button class="lc" onclick="togRec(this)"><span style="font-size:20px" id="rico">⏺</span><span id="rlbl">녹화</span></button>
+    <button class="lc" onclick="togAudio()"><span style="font-size:20px" id="aico">🔇</span><span id="albl">음소거</span></button>
+    <button class="lc" onclick="togRec()"><span style="font-size:20px" id="rico">⏺</span><span id="rlbl">녹화</span></button>
     <button class="lc" onclick="snap()"><span style="font-size:20px">📷</span><span>스냅샷</span></button>
     <button class="lc" onclick="showScreen('ptz')"><span style="font-size:20px">🕹</span><span>PTZ</span></button>
   </div>
 </div>
-
 <div class="screen" id="scr-ptz">
-  <div class="sbar"><span id="c2" style="font-size:15px;font-weight:600">00:00</span><span style="font-size:13px;color:#4aa8ff;font-weight:600">myVMS</span><span style="font-size:12px">📶🔋</span></div>
-  <div class="tbar"><button class="ibtn" onclick="showScreen('full')">←</button><h2>PTZ 제어</h2><div style="width:34px"></div></div>
+  <div class="sbar"><span id="c2">00:00</span><span class="stitle">myVMS</span><span style="font-size:12px">📶🔋</span></div>
+  <div class="tbar"><button class="ibtn" onclick="showScreen('full')">←</button><h2>PTZ 제어</h2><div style="width:36px"></div></div>
   <div class="sa">
-    <div class="ptprev"><canvas id="ptcanv"></canvas></div>
+    <div class="ptprev"><span style="font-size:48px">🎯</span><span style="font-size:12px;color:#557">PTZ 제어 중</span></div>
     <div class="ptpad">
-      <div></div><button class="ptbtn" onpointerdown="ptzOn('U')" onpointerup="ptzOff()">↑</button><div></div>
-      <button class="ptbtn" onpointerdown="ptzOn('L')" onpointerup="ptzOff()">←</button>
-      <button class="ptbtn ptctr">홈</button>
-      <button class="ptbtn" onpointerdown="ptzOn('R')" onpointerup="ptzOff()">→</button>
-      <div></div><button class="ptbtn" onpointerdown="ptzOn('D')" onpointerup="ptzOff()">↓</button><div></div>
+      <div></div><button class="ptbtn" onpointerdown="ptzOn('위')" onpointerup="ptzOff()">↑</button><div></div>
+      <button class="ptbtn" onpointerdown="ptzOn('좌')" onpointerup="ptzOff()">←</button>
+      <button class="ptbtn ptctr" onclick="showToast('홈 이동')">홈</button>
+      <button class="ptbtn" onpointerdown="ptzOn('우')" onpointerup="ptzOff()">→</button>
+      <div></div><button class="ptbtn" onpointerdown="ptzOn('아래')" onpointerup="ptzOff()">↓</button><div></div>
     </div>
     <div class="ptzr">
-      <button class="ptzb" onpointerdown="ptzOn('ZI')" onpointerup="ptzOff()">＋</button>
+      <button class="ptzb" onpointerdown="ptzOn('줌인')" onpointerup="ptzOff()">＋</button>
       <span style="color:#666;font-size:13px">줌</span>
-      <button class="ptzb" onpointerdown="ptzOn('ZO')" onpointerup="ptzOff()">－</button>
+      <button class="ptzb" onpointerdown="ptzOn('줌아웃')" onpointerup="ptzOff()">－</button>
     </div>
   </div>
 </div>
-
 <div class="screen" id="scr-device">
-  <div class="sbar"><span id="c3" style="font-size:15px;font-weight:600">00:00</span><span style="font-size:13px;color:#4aa8ff;font-weight:600">myVMS</span><span style="font-size:12px">📶🔋</span></div>
-  <div class="tbar"><h2>장치 관리</h2><button class="ibtn" onclick="showScreen('add')" style="color:#4aa8ff;font-size:22px">+</button></div>
+  <div class="sbar"><span id="c3">00:00</span><span class="stitle">myVMS</span><span style="font-size:12px">📶🔋</span></div>
+  <div class="tbar"><h2>장치 관리</h2><button class="ibtn" onclick="showScreen('add')" style="color:#4aa8ff;font-size:24px;background:#0a1e35">+</button></div>
   <div class="sa dl" id="dlist"></div>
 </div>
-
 <div class="screen" id="scr-add">
-  <div class="sbar"><span id="c4" style="font-size:15px;font-weight:600">00:00</span><span style="font-size:13px;color:#4aa8ff;font-weight:600">myVMS</span><span style="font-size:12px">📶🔋</span></div>
-  <div class="tbar"><button class="ibtn" onclick="showScreen('device')">←</button><h2>장치 추가</h2><div style="width:34px"></div></div>
+  <div class="sbar"><span id="c4">00:00</span><span class="stitle">myVMS</span><span style="font-size:12px">📶🔋</span></div>
+  <div class="tbar"><button class="ibtn" onclick="showScreen('device')">←</button><h2>장치 추가</h2><div style="width:36px"></div></div>
   <div class="sa">
     <div class="mgrid">
-      <div class="mc mcdid active" onclick="selM('did',this)"><div class="mck">✓</div><div class="mic">📡</div><div class="mt">DID · P2P</div><div class="ms">QR코드 번호로 원격 접속</div></div>
-      <div class="mc mcip" onclick="selM('ip',this)"><div class="mck">✓</div><div class="mic">🌐</div><div class="mt">IP 주소</div><div class="ms">IP·포트·프로토콜로 직접 연결</div></div>
-      <div class="mc mclan" onclick="selM('lan',this)"><div class="mck">✓</div><div class="mic">📶</div><div class="mt">LAN 자동 탐색</div><div class="ms">같은 Wi-Fi 자동 검색</div></div>
-      <div class="mc mcqr" onclick="selM('qr',this)"><div class="mck">✓</div><div class="mic">🔲</div><div class="mt">QR 스캔</div><div class="ms">카메라로 QR 코드 스캔</div></div>
+      <div class="mc mcdid active" id="m-did" onclick="selM('did',this)"><div class="mck">✓</div><div class="mic">📡</div><div class="mt">DID · P2P</div><div class="ms">QR코드 번호로 원격 접속</div></div>
+      <div class="mc mcip" id="m-ip" onclick="selM('ip',this)"><div class="mck">✓</div><div class="mic">🌐</div><div class="mt">IP 주소</div><div class="ms">IP·포트·프로토콜로 직접 연결</div></div>
+      <div class="mc mclan" id="m-lan" onclick="selM('lan',this)"><div class="mck">✓</div><div class="mic">📶</div><div class="mt">LAN 자동 탐색</div><div class="ms">같은 Wi-Fi 자동 검색</div></div>
+      <div class="mc mcqr" id="m-qr" onclick="selM('qr',this)"><div class="mck">✓</div><div class="mic">🔲</div><div class="mt">QR 스캔</div><div class="ms">카메라로 QR 코드 스캔</div></div>
     </div>
     <div class="dvd"></div>
     <div class="fp active" id="fp-did">
-      <div class="fg"><div class="fl">장치 DID <em style="font-style:normal;color:#444">NVR 본체 QR코드</em></div><input class="fi" id="idid" placeholder="IOTxxxx-xxxxxx-xxxxx"></div>
-      <div class="fg"><div class="fl">장치 이름 <em style="font-style:normal;color:#444">선택</em></div><input class="fi" id="ididnm" placeholder="예: 현관 카메라"></div>
-      <div class="fg"><div class="fl">비밀번호 <em style="font-style:normal;color:#444">기본값: 없음</em></div><input class="fi" type="password" placeholder="••••••"></div>
+      <div class="fg"><div class="fl"><span>장치 DID</span><span style="color:#444">NVR 본체 QR코드</span></div><input class="fi" id="idid" placeholder="IOTxxxx-xxxxxx-xxxxx"></div>
+      <div class="fg"><div class="fl"><span>장치 이름</span><span style="color:#444">선택</span></div><input class="fi" id="ididnm" placeholder="예: 현관 카메라"></div>
+      <div class="fg"><div class="fl"><span>비밀번호</span><span style="color:#444">기본값: 없음</span></div><input class="fi" type="password" placeholder="••••••"></div>
       <button class="badd bdid" onclick="doAdd('did',this)">P2P 연결 및 추가</button>
       <div class="hint hdid">형식: <strong>IOTxxxx-xxxxxx-xxxxx</strong><br>NVR 메뉴 → 장치정보 → DID 확인</div>
+      <div style="height:20px"></div>
     </div>
     <div class="fp" id="fp-ip">
       <div style="font-size:11px;color:#666;margin-bottom:7px">프로토콜</div>
@@ -179,38 +172,26 @@ body{background:#0d0d0d;color:#fff;font-family:-apple-system,sans-serif;margin:0
         <button class="pp" onclick="pickP(this,'RTSP','554')">RTSP · 554</button>
         <button class="pp" onclick="pickP(this,'HTTP','80')">HTTP CGI</button>
       </div>
-      <div class="fr">
-        <div class="fg" style="flex:2"><div class="fl">IP 주소</div><input class="fi" id="iip" placeholder="192.168.1.100"></div>
-        <div class="fg" style="flex:1"><div class="fl">포트</div><input class="fi" id="iport" value="34567"></div>
-      </div>
-      <div class="fr">
-        <div class="fg"><div class="fl">계정</div><input class="fi" placeholder="admin"></div>
-        <div class="fg"><div class="fl">비밀번호</div><input class="fi" type="password" placeholder="••••"></div>
-      </div>
+      <div class="fr"><div class="fg" style="flex:2"><div class="fl">IP 주소</div><input class="fi" id="iip" placeholder="192.168.1.100"></div><div class="fg" style="flex:1"><div class="fl">포트</div><input class="fi" id="iport" value="34567"></div></div>
+      <div class="fr"><div class="fg"><div class="fl">계정</div><input class="fi" placeholder="admin"></div><div class="fg"><div class="fl">비밀번호</div><input class="fi" type="password" placeholder="••••"></div></div>
       <div class="fg"><div class="fl">장치 이름</div><input class="fi" id="iipnm" placeholder="예: 거실 NVR"></div>
-      <div class="trow">
-        <button class="tbtn" onclick="testC()">연결 테스트</button>
-        <div class="tres" id="tres">IP 입력 후 테스트</div>
-      </div>
+      <div class="fr" style="align-items:flex-end;margin-bottom:12px"><button class="tbtn" onclick="testC()">연결 테스트</button><div class="tres" id="tres">IP 입력 후 테스트</div></div>
       <button class="badd bip" onclick="doAdd('ip',this)">IP 장치 추가</button>
-      <div class="hint hip"><strong>P6S</strong> — EasyVMS 동일 프로토콜 (34567)<br><strong>ONVIF</strong> — 국제 표준<br><strong>RTSP</strong> — 스트림 직접 수신</div>
+      <div class="hint hip"><strong>P6S</strong> — EasyVMS 동일 프로토콜(34567)<br><strong>ONVIF</strong> — 국제 표준<br><strong>RTSP</strong> — 스트림 직접 수신</div>
+      <div style="height:20px"></div>
     </div>
     <div class="fp" id="fp-lan">
-      <div style="background:#161616;border-radius:12px;padding:16px;text-align:center;margin-bottom:12px">
-        <p style="color:#559955;font-size:13px;margin-bottom:12px">같은 Wi-Fi의 장치를 자동으로 탐색합니다</p>
-        <button class="badd blan" style="width:auto;padding:10px 28px" onclick="doLan()">탐색 시작</button>
-      </div>
-      <div id="lanlist"></div>
+      <div style="background:#161616;border-radius:12px;padding:16px;text-align:center;margin-bottom:12px"><p style="color:#559955;font-size:13px;margin:0 0 12px">같은 Wi-Fi의 NVR·카메라를 자동 탐색합니다</p><button class="badd blan" style="width:auto;padding:10px 32px" onclick="doLan()">🔍 탐색 시작</button></div>
+      <div id="lanlist"></div><div style="height:20px"></div>
     </div>
     <div class="fp" id="fp-qr">
-      <div class="sbox" onclick="simQR()"><span style="font-size:52px">🔲</span><span style="color:#666;font-size:13px">카메라로 QR코드 스캔</span><span style="color:#c060b8;font-size:12px">탭하여 시작</span></div>
+      <div class="sbox" onclick="simQR()"><span style="font-size:56px">🔲</span><span style="color:#c060b8;font-size:13px;font-weight:600">탭하여 QR 스캔 시작</span><span style="color:#555;font-size:11px">카메라로 NVR QR코드를 스캔하세요</span></div>
+      <div style="height:20px"></div>
     </div>
-    <div style="height:20px"></div>
   </div>
 </div>
-
 <div class="screen" id="scr-settings">
-  <div class="sbar"><span id="c5" style="font-size:15px;font-weight:600">00:00</span><span style="font-size:13px;color:#4aa8ff;font-weight:600">myVMS</span><span style="font-size:12px">📶🔋</span></div>
+  <div class="sbar"><span id="c5">00:00</span><span class="stitle">myVMS</span><span style="font-size:12px">📶🔋</span></div>
   <div class="tbar"><h2>설정</h2></div>
   <div class="sa" style="padding:12px 0 20px">
     <div class="ssec"><div class="stit">영상</div>
@@ -222,68 +203,81 @@ body{background:#0d0d0d;color:#fff;font-family:-apple-system,sans-serif;margin:0
       <div class="si"><div style="width:32px;height:32px;border-radius:8px;background:#2a1a00;display:flex;align-items:center;justify-content:center;font-size:16px">🔔</div><div class="sitxt"><p>모션 감지 알림</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
       <div class="si"><div style="width:32px;height:32px;border-radius:8px;background:#001a2a;display:flex;align-items:center;justify-content:center;font-size:16px">🔄</div><div class="sitxt"><p>자동 재연결</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
     </div>
-    <div style="text-align:center;padding:16px"><span style="color:#333;font-size:12px">myVMS v1.0.0 — P6SLite 기반</span></div>
+    <div class="ssec"><div class="stit">정보</div>
+      <div class="si"><div style="width:32px;height:32px;border-radius:8px;background:#1a0a1a;display:flex;align-items:center;justify-content:center;font-size:16px">ℹ️</div><div class="sitxt"><p>버전</p><small>myVMS v1.1.0 — P6SLite 기반</small></div></div>
+    </div>
   </div>
 </div>
-
-<div class="nav" id="mainnav">
-  <button class="ni active" id="nlive" onclick="navTo('live',this)">📷<span>라이브</span></button>
-  <button class="ni" id="ndev" onclick="navTo('device',this)">📡<span>장치</span></button>
-  <button class="ni" id="nset" onclick="navTo('settings',this)">⚙️<span>설정</span></button>
+<nav class="nav" id="mainnav">
+  <button class="ni active" id="nlive" onclick="navTo('live',this)"><span class="ni-ico">📷</span><span>라이브</span></button>
+  <button class="ni" id="ndev" onclick="navTo('device',this)"><span class="ni-ico">📡</span><span>장치</span></button>
+  <button class="ni" id="nset" onclick="navTo('settings',this)"><span class="ni-ico">⚙️</span><span>설정</span></button>
+</nav>
 </div>
-
 <script>
 const NVS=['live','device','settings'];
-let cur='live',curCam=0,gcols=2;
+let cur='live',curCam=0,gcols=2,curProto='P6S';
 const devs=[
-  {did:'IOT12345-678901-23456',name:'현관 카메라',ch:1,online:true,proto:'DID'},
-  {did:'IOT99999-111111-00000',name:'주차장 NVR (4CH)',ch:4,online:true,proto:'IP'},
-  {did:'IOT55555-222222-33333',name:'사무실 카메라',ch:2,online:false,proto:'ONVIF'},
+  {did:'IOT12345-678901-23456',name:'현관 카메라',ch:1,online:true,prot:'DID'},
+  {did:'IOT99999-111111-00000',name:'주차장 NVR (4CH)',ch:4,online:true,prot:'IP'},
+  {did:'IOT55555-222222-33333',name:'사무실 카메라',ch:2,online:false,prot:'ONVIF'},
 ];
 const CNM=['현관 카메라','주차장 CH1','사무실','주차장 CH2'];
-const CC=[['#0d1a0d','#1a3a1a'],['#0d0d1a','#1a1a3a'],['#1a0d0d','#3a1a1a'],['#0d1a1a','#1a3a3a']];
-let proto='P6S';
-function showScreen(s){document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));document.getElementById('scr-'+s).classList.add('active');cur=s;document.getElementById('mainnav').style.display=NVS.includes(s)?'flex':'none';if(s==='full')startFull();if(s==='ptz')startPtz();}
+const CICO=['🏠','🚗','🏢','🚗'];
+const CBG=['linear-gradient(135deg,#0d1a0d,#1a3a1a)','linear-gradient(135deg,#0d0d1a,#1a1a3a)','linear-gradient(135deg,#1a0a0a,#3a1a1a)','linear-gradient(135deg,#0d1a1a,#1a3a3a)'];
+function showScreen(s){document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));document.getElementById('scr-'+s).classList.add('active');cur=s;document.getElementById('mainnav').style.display=NVS.includes(s)?'flex':'none';if(s==='full')buildFull();}
 function goBack(){if(cur==='full')showScreen('live');else if(cur==='ptz')showScreen('full');else showScreen('device');}
 function navTo(s,b){document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));b.classList.add('active');showScreen(s);}
 function pad(n){return String(n).padStart(2,'0');}
+function updClk(){const n=new Date();const t=pad(n.getHours())+':'+pad(n.getMinutes());['c0','c1','c2','c3','c4','c5'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=t;});}
+updClk();setInterval(updClk,10000);
 function initGrid(){
   const g=document.getElementById('cgrid');g.innerHTML='';
   g.style.gridTemplateColumns=gcols===1?'1fr':'1fr 1fr';
   CNM.forEach((nm,i)=>{
     const cell=document.createElement('div');cell.className='cc';
-    const cv=document.createElement('canvas');cv.width=180;cv.height=101;
-    const ov=document.createElement('div');ov.className='cov';
-    ov.innerHTML='<span>'+nm+'</span><div class="'+(i===2?'cdo':'cdl')+'"></div>';
+    const mock=document.createElement('div');mock.className='cmock';mock.style.background=CBG[i%4];
+    mock.innerHTML='<span style="font-size:'+(gcols===1?'40':'28')+'px">'+CICO[i]+'</span><span style="font-size:11px;color:#8a8">'+nm+'</span>';
+    const rec=document.createElement('div');rec.className='crec';rec.textContent=i!==2?'REC':'OFF';rec.style.color=i!==2?'#50c850':'#664';
+    const clk=document.createElement('div');clk.className='ctim';clk.id='ct'+i;
+    const ov=document.createElement('div');ov.className='cov';ov.innerHTML='<span>'+nm+'</span><div class="'+(i===2?'dot-off':'dot-on')+'"></div>';
     const xb=document.createElement('button');xb.className='cxb';xb.textContent='⛶';
     xb.onclick=e=>{e.stopPropagation();curCam=i;document.getElementById('ftit').textContent=nm;showScreen('full');};
-    cell.appendChild(cv);cell.appendChild(ov);cell.appendChild(xb);
+    cell.appendChild(mock);cell.appendChild(rec);cell.appendChild(clk);cell.appendChild(ov);cell.appendChild(xb);
     cell.onclick=()=>{curCam=i;document.getElementById('ftit').textContent=nm;showScreen('full');};
-    g.appendChild(cell);animG(cv,i);
+    g.appendChild(cell);
   });
+  const upd=()=>{const n=new Date();const t=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());CNM.forEach((_,i)=>{const e=document.getElementById('ct'+i);if(e)e.textContent=t;});};
+  upd();setInterval(upd,1000);
 }
 function toggleGrid(){gcols=gcols===2?1:2;initGrid();}
-function animG(cv,i){const ctx=cv.getContext('2d');const c=CC[i];let t=0;function draw(){t+=.018;ctx.fillStyle=c[0];ctx.fillRect(0,0,180,101);for(let k=0;k<3;k++){ctx.fillStyle=c[1];ctx.fillRect(Math.sin(t*.7+k*2.1)*55+70,Math.cos(t*.5+k*1.7)*30+38,38,22);}if(i!==2){ctx.fillStyle='rgba(0,200,80,.7)';ctx.font='bold 8px monospace';ctx.fillText('REC',3,13);}ctx.fillStyle='rgba(255,255,255,.25)';ctx.font='7px monospace';const n=new Date();ctx.fillText(pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds()),3,97);requestAnimationFrame(draw);}draw();}
-function startFull(){const cv=document.getElementById('fcanv');if(!cv)return;const W=window.innerWidth,H=Math.round(W*9/16);cv.width=W;cv.height=H;const ctx=cv.getContext('2d');const c=CC[curCam];let t=0;function draw(){t+=.018;ctx.fillStyle=c[0];ctx.fillRect(0,0,W,H);for(let k=0;k<5;k++){ctx.fillStyle=c[1];ctx.fillRect(Math.sin(t*.7+k*1.9)*W*.3+W*.4,Math.cos(t*.5+k*1.5)*H*.3+H*.4,W*.18,H*.2);}ctx.fillStyle='rgba(0,200,80,.8)';ctx.font='bold 12px monospace';ctx.fillText('REC',8,20);ctx.fillStyle='rgba(255,255,255,.3)';ctx.font='10px monospace';const n=new Date();ctx.fillText(pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds())+'  CH'+(curCam+1),8,H-8);if(cur==='full')requestAnimationFrame(draw);}draw();const tb=document.getElementById('ctabs');tb.innerHTML='';['CH 1','CH 2','CH 3','CH 4'].forEach((l,i)=>{const b=document.createElement('button');b.className='ctab'+(i===curCam?' active':'');b.textContent=l;b.onclick=()=>{curCam=i;document.querySelectorAll('.ctab').forEach((x,j)=>x.classList.toggle('active',j===i));startFull();};tb.appendChild(b);});}
-function startPtz(){const cv=document.getElementById('ptcanv');if(!cv)return;const W=window.innerWidth,H=Math.round(W*9/16);cv.width=W;cv.height=H;const ctx=cv.getContext('2d');let t=0;function draw(){t+=.015;ctx.fillStyle='#0d1a0d';ctx.fillRect(0,0,W,H);for(let i=0;i<7;i++){ctx.fillStyle='#1a3a1a';ctx.fillRect(i*W/6,H*.2,W/8,H*.6);}ctx.strokeStyle='rgba(0,255,80,.4)';ctx.lineWidth=1.5;ctx.strokeRect(W*.3,H*.25,W*.4,H*.5);ctx.fillStyle='rgba(255,255,255,.25)';ctx.font='9px monospace';ctx.fillText('PTZ ACTIVE',6,H-8);if(cur==='ptz')requestAnimationFrame(draw);}draw();}
-function togAudio(b){const ia=document.getElementById('aico');const al=document.getElementById('albl');ia.textContent=ia.textContent==='🔇'?'🔊':'🔇';al.textContent=al.textContent==='음소거'?'소리':'음소거';}
-function togRec(b){const ri=document.getElementById('rico');const rl=document.getElementById('rlbl');const isRec=ri.textContent==='⏺';ri.textContent=isRec?'⏹':'⏺';rl.textContent=isRec?'중지':'녹화';showToast(isRec?'녹화 시작됨':'녹화 중지됨');}
-function snap(){showToast('스냅샷 저장됨 📷');}
-function ptzOn(d){showToast('PTZ: '+{U:'위',D:'아래',L:'좌',R:'우',ZI:'줌 인',ZO:'줌 아웃'}[d]);}
+function buildFull(){
+  document.getElementById('fv-ico').textContent=CICO[curCam]||'📹';
+  document.getElementById('fv-nm').textContent=(CNM[curCam]||'카메라')+' — 라이브 연결 중';
+  const tb=document.getElementById('ctabs');tb.innerHTML='';
+  ['CH 1','CH 2','CH 3','CH 4'].forEach((l,i)=>{const b=document.createElement('button');b.className='ctab'+(i===curCam?' active':'');b.textContent=l;b.onclick=()=>{curCam=i;document.querySelectorAll('.ctab').forEach((x,j)=>x.classList.toggle('active',j===i));buildFull();};tb.appendChild(b);});
+}
+function togAudio(){const ia=document.getElementById('aico'),al=document.getElementById('albl');if(ia.textContent==='🔇'){ia.textContent='🔊';al.textContent='소리';}else{ia.textContent='🔇';al.textContent='음소거';}}
+function togRec(){const ri=document.getElementById('rico'),rl=document.getElementById('rlbl');const on=ri.textContent==='⏺';ri.textContent=on?'⏹':'⏺';rl.textContent=on?'중지':'녹화';showToast(on?'🔴 녹화 시작':'⏹ 녹화 중지');}
+function snap(){showToast('📷 스냅샷 저장됨');}
+function ptzOn(d){showToast('PTZ: '+d);}
 function ptzOff(){}
-function initDevList(){const l=document.getElementById('dlist');l.innerHTML='';if(!devs.length){l.innerHTML='<div style="text-align:center;padding:48px 24px;color:#666"><div style="font-size:56px;margin-bottom:12px">📷</div><p style="font-size:15px;color:#aaa">등록된 장치가 없습니다</p></div>';return;}const ib={DID:'#0a1e35',IP:'#1a1a00',ONVIF:'#001a10'};devs.forEach((d,i)=>{const c=document.createElement('div');c.className='dc';c.innerHTML='<div class="dct"><div class="diw" style="background:'+(ib[d.proto]||'#1a1a1a')+'"><span style="font-size:20px">📹</span></div><div class="di"><div class="dn">'+d.name+'</div><div class="dd">'+d.did+' · '+d.proto+'</div></div><span class="db '+(d.online?'bon':'boff')+'">'+(d.online?'온라인':'오프라인')+'</span></div><div class="da"><button class="dab p" onclick="openLive('+i+')">라이브</button><button class="dab">재생</button><button class="dab" onclick="showScreen('ptz')">PTZ</button><button class="dab d" onclick="delDev('+i+')">삭제</button></div>';l.appendChild(c);});}
+function initDevList(){
+  const l=document.getElementById('dlist');l.innerHTML='';
+  if(!devs.length){l.innerHTML='<div class="empty"><div class="empty-ico">📷</div><div class="empty-t">등록된 장치가 없습니다</div><div class="empty-s">+ 버튼을 눌러 NVR을 추가하세요</div></div>';return;}
+  const ib={DID:'#0a1e35',IP:'#1a1a00',ONVIF:'#001a10'};
+  devs.forEach((d,i)=>{const c=document.createElement('div');c.className='dc';c.innerHTML='<div class="dct"><div class="diw" style="background:'+(ib[d.prot]||'#1a1a1a')+'"><span style="font-size:20px">📹</span></div><div class="di"><div class="dn">'+d.name+'</div><div class="dd">'+d.did+' · '+d.prot+'</div></div><span class="db '+(d.online?'bon':'boff')+'">'+(d.online?'온라인':'오프라인')+'</span></div><div class="da"><button class="dab p" onclick="openLive('+i+')">라이브</button><button class="dab" onclick="showToast('재생 준비 중...')">재생</button><button class="dab" onclick="showScreen('ptz')">PTZ</button><button class="dab d" onclick="delDev('+i+')">삭제</button></div>';l.appendChild(c);});
+}
 function openLive(i){curCam=i;document.getElementById('ftit').textContent=devs[i].name;showScreen('full');}
-function delDev(i){if(confirm('삭제?')){devs.splice(i,1);initDevList();showToast('삭제됨');}}
+function delDev(i){if(confirm(devs[i].name+' 삭제?')){devs.splice(i,1);initDevList();showToast('삭제됨');}}
 function selM(id,c){document.querySelectorAll('.mc').forEach(x=>x.classList.remove('active'));c.classList.add('active');document.querySelectorAll('.fp').forEach(p=>p.classList.remove('active'));document.getElementById('fp-'+id).classList.add('active');}
-function pickP(b,p,port){document.querySelectorAll('.pp').forEach(x=>x.classList.remove('active'));b.classList.add('active');proto=p;document.getElementById('iport').value=port;document.getElementById('tres').textContent='IP 입력 후 테스트';document.getElementById('tres').style.color='#444';}
-function testC(){const ip=document.getElementById('iip').value.trim();const r=document.getElementById('tres');if(!ip){r.textContent='IP를 입력하세요';r.style.color='#f66';return;}r.textContent='확인 중...';r.style.color='#888';setTimeout(()=>{r.textContent='✓ '+ip+':'+document.getElementById('iport').value+' 응답 확인';r.style.color='#50c850';},1400);}
-function doAdd(type,btn){const orig=btn.textContent;btn.disabled=true;btn.textContent='연결 중...';setTimeout(()=>{btn.disabled=false;btn.textContent=orig;let did,name,p;if(type==='did'){did=document.getElementById('idid').value.trim();name=document.getElementById('ididnm').value.trim()||'DID 장치';p='DID';}else if(type==='ip'){did=document.getElementById('iip').value.trim()+':'+document.getElementById('iport').value.trim();name=document.getElementById('iipnm').value.trim()||proto+' 장치';p=proto;}else{did='IOT-LAN-001';name='LAN 장치';p='P6S';}if(!did){showToast('정보를 입력하세요');return;}devs.push({did,name,ch:4,online:true,proto:p});initDevList();showToast("'"+name+"' 추가 완료 ✓");setTimeout(()=>showScreen('device'),800);},1500);}
-function doLan(){const l=document.getElementById('lanlist');l.innerHTML='<p style="text-align:center;color:#666;padding:20px;font-size:13px">탐색 중...</p>';setTimeout(()=>{const found=[{n:'P6S NVR',ip:'192.168.1.100',port:34567,p:'P6S'},{n:'ONVIF Camera',ip:'192.168.1.105',port:80,p:'ONVIF'}];l.innerHTML=found.map(d=>'<div class="lani"><div class="lanin"><div class="lann">'+d.n+'</div><div class="lana">'+d.ip+':'+d.port+' · '+d.p+'</div></div><button class="lanb" onclick="addLan(''+d.ip+'',''+d.port+'',''+d.n+'',''+d.p+'')">추가</button></div>').join('');},2000);}
-function addLan(ip,port,nm,p){devs.push({did:ip+':'+port,name:nm,ch:4,online:true,proto:p});initDevList();showToast("'"+nm+"' 추가 완료 ✓");showScreen('device');}
-function simQR(){selM('did',document.querySelector('.mcdid'));document.getElementById('idid').value='IOT12345-ABCDEF-56789';showToast('QR 스캔 완료');}
+function pickP(b,p,port){document.querySelectorAll('.pp').forEach(x=>x.classList.remove('active'));b.classList.add('active');curProto=p;document.getElementById('iport').value=port;document.getElementById('tres').textContent='IP 입력 후 테스트';document.getElementById('tres').style.color='#444';}
+function testC(){const ip=document.getElementById('iip').value.trim();const r=document.getElementById('tres');if(!ip){r.textContent='IP를 입력하세요';r.style.color='#f66';return;}r.textContent='확인 중...';r.style.color='#888';setTimeout(()=>{r.textContent='✓ '+ip+':'+document.getElementById('iport').value+' 응답';r.style.color='#50c850';},1400);}
+function doAdd(type,btn){const orig=btn.textContent;btn.disabled=true;btn.textContent='연결 중...';setTimeout(()=>{btn.disabled=false;btn.textContent=orig;let did,name,p;if(type==='did'){did=document.getElementById('idid').value.trim();name=document.getElementById('ididnm').value.trim()||'DID 장치';p='DID';}else if(type==='ip'){did=(document.getElementById('iip').value.trim()||'0.0.0.0')+':'+document.getElementById('iport').value;name=document.getElementById('iipnm').value.trim()||curProto+' 장치';p=curProto;}else{did='IOT-LAN-AUTO';name='LAN 장치';p='P6S';}if(!did){showToast('장치 정보를 입력하세요');return;}devs.push({did,name,ch:4,online:true,prot:p});initDevList();showToast("'"+name+"' 추가 완료 ✓");setTimeout(()=>showScreen('device'),600);},1500);}
+function doLan(){const l=document.getElementById('lanlist');l.innerHTML='<p style="text-align:center;color:#666;padding:20px;font-size:13px">탐색 중... 🔍</p>';setTimeout(()=>{const found=[{n:'P6S NVR 4CH',ip:'192.168.1.100',port:34567,p:'P6S'},{n:'ONVIF Camera',ip:'192.168.1.105',port:80,p:'ONVIF'}];l.innerHTML=found.map(d=>'<div class="lani"><div style="width:36px;height:36px;border-radius:9px;background:#0d1a0d;display:flex;align-items:center;justify-content:center;font-size:18px">📹</div><div class="lanin"><div class="lann">'+d.n+'</div><div class="lana">'+d.ip+':'+d.port+' · '+d.p+'</div></div><button class="lanb" onclick="addLan(''+d.ip+'',''+d.port+'',''+d.n+'',''+d.p+'')">추가</button></div>').join('');},2000);}
+function addLan(ip,port,nm,p){devs.push({did:ip+':'+port,name:nm,ch:4,online:true,prot:p});initDevList();showToast("'"+nm+"' 추가 완료 ✓");showScreen('device');}
+function simQR(){document.getElementById('idid').value='IOT12345-ABCDEF-56789';selM('did',document.getElementById('m-did'));showToast('QR 스캔 완료 ✓');}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
-function updClk(){const n=new Date();const t=pad(n.getHours())+':'+pad(n.getMinutes());['c0','c1','c2','c3','c4','c5'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=t;});}
-updClk();setInterval(updClk,10000);
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{});});}
 initGrid();initDevList();showScreen('live');document.getElementById('nlive').classList.add('active');
 </script>
