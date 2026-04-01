@@ -30,15 +30,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 17
+
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
       - name: Build Capacitor Android project
         run: |
           mkdir -p cap_build/www
@@ -49,24 +52,31 @@ jobs:
           npx cap init "myVMS" "com.myvms.app" --web-dir=www
           npx cap add android
           chmod +x android/gradlew
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+
       - name: Build Debug APK
         run: |
           cd cap_build/android
           ./gradlew assembleDebug --no-daemon
+
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: myVMS-debug.apk
           path: cap_build/android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.run_number }}
           name: myVMS v${{ github.run_number }}
-          body: "APK 다운로드 후 Android에 설치하세요."
+          body: |
+            ## myVMS Android APK
+            아래 APK를 다운로드하여 Android에 설치하세요.
+            설치방법: 설정 → 출처를 알 수 없는 앱 허용 → APK 설치
           files: cap_build/android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
