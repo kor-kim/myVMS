@@ -52,6 +52,9 @@ jobs:
           npx cap init "myVMS" "com.myvms.app" --web-dir=www
           npx cap add android
           chmod +x android/gradlew
+          # Kotlin 버전 충돌 해결
+          echo "kotlin.stdlib.default.dependency=false" >> android/gradle.properties
+          echo "android.useAndroidX=true" >> android/gradle.properties
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -76,7 +79,7 @@ jobs:
           body: |
             ## myVMS Android APK
             아래 APK를 다운로드하여 Android에 설치하세요.
-            설치방법: 설정 → 출처를 알 수 없는 앱 허용 → APK 설치
+            설치: 설정 → 출처를 알 수 없는 앱 허용 → APK 설치
           files: cap_build/android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
