@@ -52,9 +52,20 @@ jobs:
           npx cap init "myVMS" "com.myvms.app" --web-dir=www
           npx cap add android
           chmod +x android/gradlew
-          # Kotlin 버전 충돌 해결
-          echo "kotlin.stdlib.default.dependency=false" >> android/gradle.properties
-          echo "android.useAndroidX=true" >> android/gradle.properties
+
+      - name: Patch Kotlin version conflict
+        run: |
+          # app/build.gradle 에 resolutionStrategy 주입
+          cat >> cap_build/android/app/build.gradle << 'EOF'
+
+          configurations.all {
+              resolutionStrategy {
+                  force "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+                  force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22"
+                  force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22"
+              }
+          }
+          EOF
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
