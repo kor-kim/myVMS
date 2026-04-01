@@ -28,6 +28,8 @@ jobs:
   build-apk:
     name: Build Android APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -55,8 +57,6 @@ jobs:
 
       - name: Fix Kotlin duplicate class conflict
         run: |
-          # Kotlin 1.8+ 에서 jdk7/jdk8 는 stdlib 에 통합됨
-          # app/build.gradle 에 exclude 룰 추가
           cat >> cap_build/android/app/build.gradle << 'EOF'
 
           configurations.all {
