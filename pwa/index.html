@@ -11,7 +11,7 @@
 <style>
 :root{--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;background:#0d0d0d;color:#fff;font-family:-apple-system,'Noto Sans KR',sans-serif;height:100%;overflow:hidden;}
+html,body{margin:0;padding:0;background:#0d0d0d;color:#fff;font-family:-apple-system,sans-serif;height:100%;overflow:hidden;}
 #app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:430px;margin:0 auto;overflow:hidden;}
 .screen{display:none;flex-direction:column;flex:1;overflow:hidden;}.screen.active{display:flex;}
 .sbar{display:flex;justify-content:space-between;align-items:center;padding:calc(var(--st) + 8px) 18px 6px;background:#0d0d0d;flex-shrink:0;}
@@ -181,7 +181,7 @@ html,body{margin:0;padding:0;background:#0d0d0d;color:#fff;font-family:-apple-sy
       <div style="height:20px"></div>
     </div>
     <div class="fp" id="fp-lan">
-      <div style="background:#161616;border-radius:12px;padding:16px;text-align:center;margin-bottom:12px"><p style="color:#559955;font-size:13px;margin:0 0 12px">같은 Wi-Fi의 NVR·카메라를 자동 탐색합니다</p><button class="badd blan" style="width:auto;padding:10px 32px" onclick="doLan()">🔍 탐색 시작</button></div>
+      <div style="background:#161616;border-radius:12px;padding:16px;text-align:center;margin-bottom:12px"><p style="color:#559955;font-size:13px;margin:0 0 12px">같은 Wi-Fi의 NVR을 자동 탐색합니다</p><button class="badd blan" style="width:auto;padding:10px 32px" onclick="doLan()">🔍 탐색 시작</button></div>
       <div id="lanlist"></div><div style="height:20px"></div>
     </div>
     <div class="fp" id="fp-qr">
@@ -204,7 +204,7 @@ html,body{margin:0;padding:0;background:#0d0d0d;color:#fff;font-family:-apple-sy
       <div class="si"><div style="width:32px;height:32px;border-radius:8px;background:#001a2a;display:flex;align-items:center;justify-content:center;font-size:16px">🔄</div><div class="sitxt"><p>자동 재연결</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
     </div>
     <div class="ssec"><div class="stit">정보</div>
-      <div class="si"><div style="width:32px;height:32px;border-radius:8px;background:#1a0a1a;display:flex;align-items:center;justify-content:center;font-size:16px">ℹ️</div><div class="sitxt"><p>버전</p><small>myVMS v1.1.0 — P6SLite 기반</small></div></div>
+      <div class="si"><div style="width:32px;height:32px;border-radius:8px;background:#1a0a1a;display:flex;align-items:center;justify-content:center;font-size:16px">ℹ️</div><div class="sitxt"><p>버전</p><small>myVMS v1.1.1</small></div></div>
     </div>
   </div>
 </div>
@@ -237,17 +237,20 @@ function initGrid(){
   CNM.forEach((nm,i)=>{
     const cell=document.createElement('div');cell.className='cc';
     const mock=document.createElement('div');mock.className='cmock';mock.style.background=CBG[i%4];
-    mock.innerHTML='<span style="font-size:'+(gcols===1?'40':'28')+'px">'+CICO[i]+'</span><span style="font-size:11px;color:#8a8">'+nm+'</span>';
+    mock.innerHTML='<span style="font-size:'+(gcols===1?'40':'26')+'px">'+CICO[i]+'</span><span style="font-size:10px;color:#8a8">'+nm+'</span>';
     const rec=document.createElement('div');rec.className='crec';rec.textContent=i!==2?'REC':'OFF';rec.style.color=i!==2?'#50c850':'#664';
     const clk=document.createElement('div');clk.className='ctim';clk.id='ct'+i;
-    const ov=document.createElement('div');ov.className='cov';ov.innerHTML='<span>'+nm+'</span><div class="'+(i===2?'dot-off':'dot-on')+'"></div>';
+    const ov=document.createElement('div');ov.className='cov';
+    ov.innerHTML='<span>'+nm+'</span>';
+    const dot=document.createElement('div');dot.className=i===2?'dot-off':'dot-on';
+    ov.appendChild(dot);
     const xb=document.createElement('button');xb.className='cxb';xb.textContent='⛶';
-    xb.onclick=e=>{e.stopPropagation();curCam=i;document.getElementById('ftit').textContent=nm;showScreen('full');};
+    xb.onclick=function(e){e.stopPropagation();curCam=i;document.getElementById('ftit').textContent=nm;showScreen('full');};
     cell.appendChild(mock);cell.appendChild(rec);cell.appendChild(clk);cell.appendChild(ov);cell.appendChild(xb);
-    cell.onclick=()=>{curCam=i;document.getElementById('ftit').textContent=nm;showScreen('full');};
+    cell.onclick=function(){curCam=i;document.getElementById('ftit').textContent=nm;showScreen('full');};
     g.appendChild(cell);
   });
-  const upd=()=>{const n=new Date();const t=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());CNM.forEach((_,i)=>{const e=document.getElementById('ct'+i);if(e)e.textContent=t;});};
+  const upd=function(){const n=new Date();const t=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());CNM.forEach(function(_,i){const e=document.getElementById('ct'+i);if(e)e.textContent=t;});};
   upd();setInterval(upd,1000);
 }
 function toggleGrid(){gcols=gcols===2?1:2;initGrid();}
@@ -255,7 +258,11 @@ function buildFull(){
   document.getElementById('fv-ico').textContent=CICO[curCam]||'📹';
   document.getElementById('fv-nm').textContent=(CNM[curCam]||'카메라')+' — 라이브 연결 중';
   const tb=document.getElementById('ctabs');tb.innerHTML='';
-  ['CH 1','CH 2','CH 3','CH 4'].forEach((l,i)=>{const b=document.createElement('button');b.className='ctab'+(i===curCam?' active':'');b.textContent=l;b.onclick=()=>{curCam=i;document.querySelectorAll('.ctab').forEach((x,j)=>x.classList.toggle('active',j===i));buildFull();};tb.appendChild(b);});
+  ['CH 1','CH 2','CH 3','CH 4'].forEach(function(l,i){
+    const b=document.createElement('button');b.className='ctab'+(i===curCam?' active':'');b.textContent=l;
+    b.onclick=function(){curCam=i;document.querySelectorAll('.ctab').forEach(function(x,j){x.classList.toggle('active',j===i);});buildFull();};
+    tb.appendChild(b);
+  });
 }
 function togAudio(){const ia=document.getElementById('aico'),al=document.getElementById('albl');if(ia.textContent==='🔇'){ia.textContent='🔊';al.textContent='소리';}else{ia.textContent='🔇';al.textContent='음소거';}}
 function togRec(){const ri=document.getElementById('rico'),rl=document.getElementById('rlbl');const on=ri.textContent==='⏺';ri.textContent=on?'⏹':'⏺';rl.textContent=on?'중지':'녹화';showToast(on?'🔴 녹화 시작':'⏹ 녹화 중지');}
@@ -263,22 +270,57 @@ function snap(){showToast('📷 스냅샷 저장됨');}
 function ptzOn(d){showToast('PTZ: '+d);}
 function ptzOff(){}
 function initDevList(){
-  const l=document.getElementById('dlist');l.innerHTML='';
-  if(!devs.length){l.innerHTML='<div class="empty"><div class="empty-ico">📷</div><div class="empty-t">등록된 장치가 없습니다</div><div class="empty-s">+ 버튼을 눌러 NVR을 추가하세요</div></div>';return;}
+  const l=document.getElementById('dlist');
+  while(l.firstChild)l.removeChild(l.firstChild);
+  if(!devs.length){
+    l.innerHTML='<div class="empty"><div class="empty-ico">📷</div><div class="empty-t">등록된 장치가 없습니다</div><div class="empty-s">+ 버튼을 눌러 NVR을 추가하세요</div></div>';
+    return;
+  }
   const ib={DID:'#0a1e35',IP:'#1a1a00',ONVIF:'#001a10'};
-  devs.forEach((d,i)=>{const c=document.createElement('div');c.className='dc';c.innerHTML='<div class="dct"><div class="diw" style="background:'+(ib[d.prot]||'#1a1a1a')+'"><span style="font-size:20px">📹</span></div><div class="di"><div class="dn">'+d.name+'</div><div class="dd">'+d.did+' · '+d.prot+'</div></div><span class="db '+(d.online?'bon':'boff')+'">'+(d.online?'온라인':'오프라인')+'</span></div><div class="da"><button class="dab p" onclick="openLive('+i+')">라이브</button><button class="dab" onclick="showToast('재생 준비 중...')">재생</button><button class="dab" onclick="showScreen('ptz')">PTZ</button><button class="dab d" onclick="delDev('+i+')">삭제</button></div>';l.appendChild(c);});
+  devs.forEach(function(d,i){
+    const card=document.createElement('div');card.className='dc';
+    const top=document.createElement('div');top.className='dct';
+    const ico=document.createElement('div');ico.className='diw';ico.style.background=ib[d.prot]||'#1a1a1a';
+    ico.innerHTML='<span style="font-size:20px">📹</span>';
+    const info=document.createElement('div');info.className='di';
+    info.innerHTML='<div class="dn">'+d.name+'</div><div class="dd">'+d.did+' &middot; '+d.prot+'</div>';
+    const badge=document.createElement('span');badge.className='db '+(d.online?'bon':'boff');badge.textContent=d.online?'온라인':'오프라인';
+    top.appendChild(ico);top.appendChild(info);top.appendChild(badge);
+    const btns=document.createElement('div');btns.className='da';
+    const b1=document.createElement('button');b1.className='dab p';b1.textContent='라이브';b1.onclick=function(){openLive(i);};
+    const b2=document.createElement('button');b2.className='dab';b2.textContent='재생';b2.onclick=function(){showToast('재생 준비 중...');};
+    const b3=document.createElement('button');b3.className='dab';b3.textContent='PTZ';b3.onclick=function(){showScreen('ptz');};
+    const b4=document.createElement('button');b4.className='dab d';b4.textContent='삭제';b4.onclick=function(){delDev(i);};
+    btns.appendChild(b1);btns.appendChild(b2);btns.appendChild(b3);btns.appendChild(b4);
+    card.appendChild(top);card.appendChild(btns);
+    l.appendChild(card);
+  });
 }
 function openLive(i){curCam=i;document.getElementById('ftit').textContent=devs[i].name;showScreen('full');}
 function delDev(i){if(confirm(devs[i].name+' 삭제?')){devs.splice(i,1);initDevList();showToast('삭제됨');}}
-function selM(id,c){document.querySelectorAll('.mc').forEach(x=>x.classList.remove('active'));c.classList.add('active');document.querySelectorAll('.fp').forEach(p=>p.classList.remove('active'));document.getElementById('fp-'+id).classList.add('active');}
-function pickP(b,p,port){document.querySelectorAll('.pp').forEach(x=>x.classList.remove('active'));b.classList.add('active');curProto=p;document.getElementById('iport').value=port;document.getElementById('tres').textContent='IP 입력 후 테스트';document.getElementById('tres').style.color='#444';}
-function testC(){const ip=document.getElementById('iip').value.trim();const r=document.getElementById('tres');if(!ip){r.textContent='IP를 입력하세요';r.style.color='#f66';return;}r.textContent='확인 중...';r.style.color='#888';setTimeout(()=>{r.textContent='✓ '+ip+':'+document.getElementById('iport').value+' 응답';r.style.color='#50c850';},1400);}
-function doAdd(type,btn){const orig=btn.textContent;btn.disabled=true;btn.textContent='연결 중...';setTimeout(()=>{btn.disabled=false;btn.textContent=orig;let did,name,p;if(type==='did'){did=document.getElementById('idid').value.trim();name=document.getElementById('ididnm').value.trim()||'DID 장치';p='DID';}else if(type==='ip'){did=(document.getElementById('iip').value.trim()||'0.0.0.0')+':'+document.getElementById('iport').value;name=document.getElementById('iipnm').value.trim()||curProto+' 장치';p=curProto;}else{did='IOT-LAN-AUTO';name='LAN 장치';p='P6S';}if(!did){showToast('장치 정보를 입력하세요');return;}devs.push({did,name,ch:4,online:true,prot:p});initDevList();showToast("'"+name+"' 추가 완료 ✓");setTimeout(()=>showScreen('device'),600);},1500);}
-function doLan(){const l=document.getElementById('lanlist');l.innerHTML='<p style="text-align:center;color:#666;padding:20px;font-size:13px">탐색 중... 🔍</p>';setTimeout(()=>{const found=[{n:'P6S NVR 4CH',ip:'192.168.1.100',port:34567,p:'P6S'},{n:'ONVIF Camera',ip:'192.168.1.105',port:80,p:'ONVIF'}];l.innerHTML=found.map(d=>'<div class="lani"><div style="width:36px;height:36px;border-radius:9px;background:#0d1a0d;display:flex;align-items:center;justify-content:center;font-size:18px">📹</div><div class="lanin"><div class="lann">'+d.n+'</div><div class="lana">'+d.ip+':'+d.port+' · '+d.p+'</div></div><button class="lanb" onclick="addLan(''+d.ip+'',''+d.port+'',''+d.n+'',''+d.p+'')">추가</button></div>').join('');},2000);}
+function selM(id,c){document.querySelectorAll('.mc').forEach(function(x){x.classList.remove('active');});c.classList.add('active');document.querySelectorAll('.fp').forEach(function(p){p.classList.remove('active');});document.getElementById('fp-'+id).classList.add('active');}
+function pickP(b,p,port){document.querySelectorAll('.pp').forEach(function(x){x.classList.remove('active');});b.classList.add('active');curProto=p;document.getElementById('iport').value=port;document.getElementById('tres').textContent='IP 입력 후 테스트';document.getElementById('tres').style.color='#444';}
+function testC(){const ip=document.getElementById('iip').value.trim();const r=document.getElementById('tres');if(!ip){r.textContent='IP를 입력하세요';r.style.color='#f66';return;}r.textContent='확인 중...';r.style.color='#888';setTimeout(function(){r.textContent='✓ '+ip+':'+document.getElementById('iport').value+' 응답';r.style.color='#50c850';},1400);}
+function doAdd(type,btn){const orig=btn.textContent;btn.disabled=true;btn.textContent='연결 중...';setTimeout(function(){btn.disabled=false;btn.textContent=orig;let did,name,p;if(type==='did'){did=document.getElementById('idid').value.trim();name=document.getElementById('ididnm').value.trim()||'DID 장치';p='DID';}else if(type==='ip'){did=(document.getElementById('iip').value.trim()||'0.0.0.0')+':'+document.getElementById('iport').value;name=document.getElementById('iipnm').value.trim()||curProto+' 장치';p=curProto;}else{did='IOT-LAN-AUTO';name='LAN 장치';p='P6S';}if(!did){showToast('장치 정보를 입력하세요');return;}devs.push({did:did,name:name,ch:4,online:true,prot:p});initDevList();showToast("'"+name+"' 추가 완료 ✓");setTimeout(function(){showScreen('device');},600);},1500);}
+function doLan(){
+  const l=document.getElementById('lanlist');
+  l.innerHTML='<p style="text-align:center;color:#666;padding:20px;font-size:13px">탐색 중... 🔍</p>';
+  setTimeout(function(){
+    const found=[{n:'P6S NVR 4CH',ip:'192.168.1.100',port:34567,p:'P6S'},{n:'ONVIF Camera',ip:'192.168.1.105',port:80,p:'ONVIF'}];
+    l.innerHTML='';
+    found.forEach(function(d){
+      const row=document.createElement('div');row.className='lani';
+      row.innerHTML='<div style="width:36px;height:36px;border-radius:9px;background:#0d1a0d;display:flex;align-items:center;justify-content:center;font-size:18px">📹</div><div class="lanin"><div class="lann">'+d.n+'</div><div class="lana">'+d.ip+':'+d.port+' · '+d.p+'</div></div>';
+      const btn=document.createElement('button');btn.className='lanb';btn.textContent='추가';
+      btn.onclick=function(){addLan(d.ip,d.port,d.n,d.p);};
+      row.appendChild(btn);l.appendChild(row);
+    });
+  },2000);
+}
 function addLan(ip,port,nm,p){devs.push({did:ip+':'+port,name:nm,ch:4,online:true,prot:p});initDevList();showToast("'"+nm+"' 추가 완료 ✓");showScreen('device');}
 function simQR(){document.getElementById('idid').value='IOT12345-ABCDEF-56789';selM('did',document.getElementById('m-did'));showToast('QR 스캔 완료 ✓');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
-if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{});});}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},2200);}
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});}
 initGrid();initDevList();showScreen('live');document.getElementById('nlive').classList.add('active');
 </script>
 </body>
