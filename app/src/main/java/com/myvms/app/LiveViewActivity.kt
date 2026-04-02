@@ -55,7 +55,7 @@ class LiveViewActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.btnQuality).setOnClickListener { toggleQuality() }
         findViewById<ImageButton>(R.id.btnSnapshot).setOnClickListener {
-            Toast.makeText(this, "📷 스냅샷", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "\uD83D\uDCF7 \uc2a4\ub0c5\uc0f7", Toast.LENGTH_SHORT).show()
         }
         findViewById<ImageButton>(R.id.btnPtz).setOnClickListener {
             layoutPtz.visibility = if (layoutPtz.visibility == View.VISIBLE) View.GONE else View.VISIBLE
@@ -66,41 +66,45 @@ class LiveViewActivity : AppCompatActivity() {
     }
 
     private fun startStream() {
-        val url = device.getRtspUrl(currentChannel, isSubStream)
-        if (url.isEmpty()) { tvStatus.text = "P2P SDK 필요"; return }
-        tvStatus.text = "연결 중..."; tvStatus.setTextColor(0xFFFFAA00.toInt())
+        val rtspUrl = device.getRtspUrl(currentChannel, isSubStream)
+        if (rtspUrl.isEmpty()) { tvStatus.text = "P2P SDK \ud544\uc694"; return }
+        tvStatus.text = "\uc5f0\uacb0 \uc911..."; tvStatus.setTextColor(0xFFFFAA00.toInt())
         player?.release()
         player = ExoPlayer.Builder(this).build().also { exo ->
             playerView.player = exo
-            exo.setMediaItem(MediaItem.fromUri(Uri.parse(url)))
+            exo.setMediaItem(MediaItem.fromUri(Uri.parse(rtspUrl)))
             exo.prepare(); exo.play()
             exo.addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(state: Int) {
                     when (state) {
                         Player.STATE_READY -> {
-                            tvStatus.text = "● LIVE"; tvStatus.setTextColor(0xFF4CAF50.toInt())
-                            scope.launch { while(isActive) {
-                                delay(2000)
-                                player?.videoFormat?.let { f ->
-                                    if(f.width>0) tvBitrate.text = "${f.width}x${f.height}"
+                            tvStatus.text = "\u25cf LIVE"; tvStatus.setTextColor(0xFF4CAF50.toInt())
+                            scope.launch {
+                                while(isActive) {
+                                    delay(2000)
+                                    player?.videoFormat?.let { f ->
+                                        if (f.width > 0) tvBitrate.text = "${f.width}x${f.height}"
+                                    }
                                 }
-                            }}
+                            }
                         }
-                        Player.STATE_BUFFERING -> { tvStatus.text = "⏳ 버퍼링..."; tvStatus.setTextColor(0xFFFFAA00.toInt()) }
-                        else -> { tvStatus.text = "연결 끊김"; tvStatus.setTextColor(0xFFE53935.toInt()) }
+                        Player.STATE_BUFFERING -> {
+                            tvStatus.text = "\u23f3 \ubc84\ud37c\ub9c1..."
+                            tvStatus.setTextColor(0xFFFFAA00.toInt())
+                        }
+                        else -> {
+                            tvStatus.text = "\uc5f0\uacb0 \ub05d\uae40"
+                            tvStatus.setTextColor(0xFFE53935.toInt())
+                        }
                     }
                 }
                 override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
-                    tvStatus.text = "오류"; tvStatus.setTextColor(0xFFE53935.toInt())
+                    tvStatus.text = "\uc624\ub958"; tvStatus.setTextColor(0xFFE53935.toInt())
                     AlertDialog.Builder(this@LiveViewActivity)
-                        .setTitle("연결 실패").setMessage("URL: $url
-
-오류: ${error.message}
-
-• NVR과 같은 네트워크인지 확인
-• IP, 포트, 계정 확인")
-                        .setPositiveButton("재시도") { _, _ -> startStream() }
-                        .setNegativeButton("닫기") { _, _ -> finish() }.show()
+                        .setTitle("\uc5f0\uacb0 \uc2e4\ud328")
+                        .setMessage("URL: " + rtspUrl + "\n\n\uc624\ub958: " + error.message)
+                        .setPositiveButton("\uc7ac\uc2dc\ub3c4") { _, _ -> startStream() }
+                        .setNegativeButton("\ub2eb\uae30") { _, _ -> finish() }.show()
                 }
             })
         }
@@ -108,7 +112,8 @@ class LiveViewActivity : AppCompatActivity() {
 
     private fun toggleQuality() {
         isSubStream = !isSubStream
-        Toast.makeText(this, if (isSubStream) "서브스트림" else "메인스트림(HD)", Toast.LENGTH_SHORT).show()
+        val msg = if (isSubStream) "\uc11c\ube0c\uc2a4\ud2b8\ub9bc" else "\uba54\uc778\uc2a4\ud2b8\ub9bc(HD)"
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         startStream()
     }
 
@@ -125,19 +130,22 @@ class LiveViewActivity : AppCompatActivity() {
     }
 
     private fun setupPtzButtons() {
-        mapOf(R.id.btnPtzUp to "up", R.id.btnPtzDown to "down",
+        val ptzMap = mapOf(
+            R.id.btnPtzUp to "up", R.id.btnPtzDown to "down",
             R.id.btnPtzLeft to "left", R.id.btnPtzRight to "right",
             R.id.btnPtzZoomIn to "zoomin", R.id.btnPtzZoomOut to "zoomout"
-        ).forEach { (id, cmd) ->
-            findViewById<View>(id)?.setOnClickListener {
+        )
+        ptzMap.forEach { (btnId, cmd) ->
+            findViewById<View>(btnId)?.setOnClickListener {
                 if (device.ip.isNotEmpty()) scope.launch {
                     withContext(Dispatchers.IO) {
                         try {
-                            val code = mapOf("up" to 0,"down" to 1,"left" to 2,"right" to 3,"zoomin" to 11,"zoomout" to 12)[cmd] ?: 0
-                            httpClient.newCall(Request.Builder()
-                                .url("${device.getApiBaseUrl()}/cgi-bin/ptz.cgi?action=start&channel=$currentChannel&code=$code&arg1=0&arg2=1&arg3=0")
-                                .build()).execute()
-                        } catch(e: Exception) {}
+                            val code = mapOf("up" to 0, "down" to 1, "left" to 2, "right" to 3,
+                                "zoomin" to 11, "zoomout" to 12)[cmd] ?: 0
+                            val ptzUrl = "${device.getApiBaseUrl()}/cgi-bin/ptz.cgi" +
+                                "?action=start&channel=$currentChannel&code=$code&arg1=0&arg2=1&arg3=0"
+                            httpClient.newCall(Request.Builder().url(ptzUrl).build()).execute()
+                        } catch (e: Exception) {}
                     }
                 }
                 Toast.makeText(this, "PTZ: $cmd", Toast.LENGTH_SHORT).show()
@@ -146,17 +154,18 @@ class LiveViewActivity : AppCompatActivity() {
     }
 
     private fun showP2PNotice() {
-        tvStatus.text = "P2P SDK 필요"; tvStatus.setTextColor(0xFFFF6600.toInt())
-        AlertDialog.Builder(this).setTitle("P2P 연결")
-            .setMessage("DID: ${device.did}
-
-P2P 방식은 P6SCore SDK가 필요합니다.
-LAN 내 IP 방식으로 장치를 추가하면 즉시 영상을 볼 수 있습니다.")
-            .setPositiveButton("확인", null).setNegativeButton("닫기") { _, _ -> finish() }.show()
+        tvStatus.text = "P2P SDK \ud544\uc694"; tvStatus.setTextColor(0xFFFF6600.toInt())
+        AlertDialog.Builder(this).setTitle("P2P \uc5f0\uacb0")
+            .setMessage("DID: " + device.did + "\n\nP2P \ubc29\uc2dd\uc740 P6SCore SDK\uac00 \ud544\uc694\ud569\ub2c8\ub2e4.\n" +
+                "LAN IP \ubc29\uc2dd\uc73c\ub85c \uc7a5\uce58\ub97c \ucd94\uac00\ud558\uba74 \uc989\uc2dc \uc601\uc0c1\uc744 \ubcfc \uc218 \uc788\uc2b5\ub2c8\ub2e4.")
+            .setPositiveButton("\ud655\uc778", null)
+            .setNegativeButton("\ub2eb\uae30") { _, _ -> finish() }.show()
     }
 
     override fun onStop() { super.onStop(); player?.pause() }
-    override fun onDestroy() { super.onDestroy(); player?.release(); player = null; scope.cancel() }
+    override fun onDestroy() {
+        super.onDestroy(); player?.release(); player = null; scope.cancel()
+    }
 
     companion object { const val EXTRA_DEVICE_JSON = "device_json" }
-                        }
+}
