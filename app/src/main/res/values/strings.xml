@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">myVMS</string>
+    <string name="add_device">장치 추가</string>
+    <string name="live_view">라이브 보기</string>
+    <string name="device_list">내 장치</string>
+    <string name="connecting">연결 중...</string>
+    <string name="online">온라인</string>
+    <string name="offline">오프라인</string>
+    <string name="channel">채널</string>
+    <string name="ptz_control">PTZ 제어</string>
+    <string name="snapshot">스냅샷</string>
+    <string name="quality">화질</string>
+    <string name="settings">설정</string>
+</resources>
